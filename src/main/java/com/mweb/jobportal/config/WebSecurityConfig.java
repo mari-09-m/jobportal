@@ -1,5 +1,5 @@
 package com.mweb.jobportal.config;
-
+//mweb
 import com.mweb.jobportal.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
