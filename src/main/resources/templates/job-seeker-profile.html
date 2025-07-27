@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Candidate Profile Setup - MWebJobs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .logo-com {
+            background-color: #fb4f14; /* A shade of orange */
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- Main container: stacks vertically on mobile, horizontally on medium+ screens -->
+<div class="min-h-screen flex flex-col md:flex-row">
+    <!-- Left Pane: Image and Logo -->
+    <div class="hidden md:flex  w-full h-48 md:h-auto md:w-5/12 bg-cover bg-center relative" style="background-image: url('https://placehold.co/1000x1200/002244/FFFFFF?text=Profile');">
+        <div class="absolute inset-0 bg-blue-900 bg-opacity-50"></div>
+        <!-- Logo positioned at the top-left -->
+        <div class="relative h-full flex items-start justify-start p-8 md:p-12">
+            <h2 class="text-3xl font-bold text-white">MWebJobs<span class="logo-com text-white px-2 py-1 rounded-md ml-1">.com</span></h2>
+        </div>
+    </div>
+
+    <!-- Right Pane: Profile Form -->
+    <div class="w-full md:w-7/12 flex items-center justify-center p-6 sm:p-12 flex-grow">
+        <div class="w-full max-w-2xl">
+            <div class="text-center md:text-left mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">Candidate Profile</h1>
+                <p class="text-gray-600 mt-2">Set up your professional profile to get noticed.</p>
+            </div>
+
+            <!-- Recruiter View: Profile Image -->
+
+
+            <form th:action="@{/job-seeker-profile/addNew}" th:object="${profile}" method="post" enctype="multipart/form-data" class="space-y-6">
+
+                <div sec:authorize="hasAuthority('Recruiter')" class="flex justify-center mb-6">
+                    <img class="rounded-full h-32 w-32 object-cover border-4 border-white shadow-lg" th:src="@{*{getPhotosImagePath}}" onerror="this.onerror=null;this.src='https://placehold.co/128x128/E2E8F0/4A5568?text=U';"/>
+
+                </div>
+
+                <input id="user_account_id" th:field="*{userAccountId}" name="userAccountId" type="hidden" />
+
+                <!-- Personal Information -->
+                <div class="p-6 bg-white rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Personal Information</h3>
+                    <div class="space-y-4">
+                        <!-- Name -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                                <input placeholder="First Name" id="firstName" th:field="*{firstName}" type="text" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" />
+                            </div>
+                            <div>
+                                <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                                <input placeholder="Last Name" id="lastName" th:field="*{lastName}" type="text" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" />
+                            </div>
+                        </div>
+                        <!-- Location -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                                <input placeholder="City" id="city" name="city" th:field="*{city}" type="text" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" />
+                            </div>
+                            <div>
+                                <label for="state" class="block text-sm font-medium text-gray-700">State</label>
+                                <input placeholder="State" id="state" name="state" type="text" th:field="*{state}" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" />
+                            </div>
+                            <div>
+                                <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+                                <input placeholder="Country" id="country" name="country" th:field="*{country}" type="text" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" />
+                            </div>
+                        </div>
+                        <!-- Work Classification -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="workAuthorization" class="block text-sm font-medium text-gray-700">Work Authorization</label>
+                                <select id="workAuthorization" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 bg-white" th:field="*{workAuthorization}">
+                                    <option value="" selected>Select status...</option>
+                                    <option value="US Citizen">US Citizen</option>
+                                    <option value="Canadian Citizen">Canadian Citizen</option>
+                                    <option value="Green Card">Green Card</option>
+                                    <option value="H1 Visa">H1 Visa</option>
+                                    <option value="TN Permit">TN Permit</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="employmentType" class="block text-sm font-medium text-gray-700">Seeking Employment</label>
+                                <select id="employmentType" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 bg-white" th:field="*{employmentType}">
+                                    <option value="" selected>Select type...</option>
+                                    <option value="Full-Time">Full-time</option>
+                                    <option value="Part-Time">Part-time</option>
+                                    <option value="Freelance">Freelance</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills -->
+                <div class="p-6 bg-white rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Skills</h3>
+                    <div id="skills-container" class="space-y-4">
+                        <div class="parent" th:each="skill, iterStat : *{skills}">
+                            <div class="skill-row grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 border rounded-md">
+                                <input type="hidden" th:field="*{skills[__${iterStat.index}__].id}" />
+                                <input placeholder="Skill Name" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" th:field="*{skills[__${iterStat.index}__].name}" />
+                                <input placeholder="Years of Experience" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" th:field="*{skills[__${iterStat.index}__].yearsOfExperience}" />
+                                <select required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 bg-white" th:field="*{skills[__${iterStat.index}__].experienceLevel}">
+                                    <option value="Experience Level" selected>Experience Level</option>
+                                    <option value="Beginner">Beginner</option>
+                                    <option value="Intermediate">Intermediate</option>
+                                    <option value="Advance">Advance</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div sec:authorize="hasAuthority('Job Seeker')" class="mt-4">
+                        <button type="button" id="addSkill" class="px-4 py-2 text-sm font-medium text-orange-600 bg-orange-100 rounded-lg hover:bg-orange-200">
+                            <i class="fas fa-plus mr-2"></i>Add Skill
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Documents -->
+                <div class="p-6 bg-white rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Documents</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- Profile Photo Upload -->
+                        <div sec:authorize="hasAuthority('Job Seeker')">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
+                            <input type="file" name="image" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100"/>
+                            <input type="hidden" name="profilePhoto" th:field="*{profilePhoto}" />
+                        </div>
+                        <!-- Resume Upload/Download -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Resume</label>
+                            <div sec:authorize="hasAuthority('Job Seeker')">
+                                <input type="file" name="pdf" required="true" accept="application/pdf" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100"/>
+                                <input type="hidden" name="resume" th:field="*{resume}" />
+                            </div>
+                            <div sec:authorize="hasAuthority('Recruiter')" class="mt-2">
+                                <a sec:authorize="hasAuthority('Recruiter')"
+                                   th:href="@{|/job-seeker-profile/downloadResume?fileName=${profile.resume}&&userID=${profile.userAccountId}|}" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 inline-flex items-center">
+                                    <i class="fas fa-download mr-2"></i>Download Resume
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div sec:authorize="hasAuthority('Job Seeker')" class="pt-4">
+                    <button type="submit" id="submit2" class="w-full bg-orange-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition duration-200">
+                        Save Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script sec:authorize="hasAuthority('Recruiter')">
+    // Disable all inputs for recruiter view
+    $(document).ready(function() {
+        $("input, select, button").prop("disabled", true);
+        // Re-enable the download link
+        $("a[href*='downloadResume']").prop("disabled", false).css({"pointer-events": "auto", "opacity": "1"});
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        var skillCounter = $('div.parent').length; // Start counter from existing skills
+
+        $("#addSkill").on("click", function (e) {
+            e.preventDefault();
+
+            var newSkillRow = `
+                <div class="skill-row grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 border rounded-md">
+                    <input type="hidden" name="skills[${skillCounter}].id" />
+                    <input placeholder="Skill Name" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" name="skills[${skillCounter}].name" />
+                    <input placeholder="Years of Experience" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" name="skills[${skillCounter}].yearsOfExperience}" />
+                    <select required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 bg-white" name="skills[${skillCounter}].experienceLevel}">
+                        <option value="Experience Level" selected>Experience Level</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advance">Advance</option>
+                    </select>
+                </div>`;
+
+            $('#skills-container').append(newSkillRow);
+            skillCounter++;
+        });
+    });
+</script>
+</body>
+</html>

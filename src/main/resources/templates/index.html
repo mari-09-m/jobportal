@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>MWebJobs - Find Your Next Job</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .logo-com {
+            background-color: #fb4f14; /* A shade of orange */
+        }
+        .bg-hero-pattern {
+            background-color: #365a7e;
+            background-image: linear-gradient(
+                    to right,
+                    rgba(0, 34, 68, 0.8),
+                    rgba(0, 34, 68, 0.8)
+            );
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="bg-hero-pattern text-white flex flex-col min-h-screen">
+
+<!-- Header -->
+<header class="p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <!-- Logo -->
+        <a th:href="@{/}" class="text-2xl font-bold">MWebJobs<span class="logo-com text-white px-2 py-1 rounded-md ml-1">.com</span></a>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center space-x-4">
+            <div class="group">
+                <a href="#" class="px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700">Job Candidate</a>
+                <div class="hidden group-hover:block absolute bg-gray-800 p-2 rounded-md shadow-lg">
+                    <a th:href="@{/login}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded-md">Login</a>
+                    <a th:href="@{/register}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded-md">Register</a>
+                </div>
+            </div>
+            <div class="group">
+                <a href="#" class="px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700">Recruiter</a>
+                <div class="hidden group-hover:block absolute bg-gray-800 p-2 rounded-md shadow-lg">
+                    <a th:href="@{/login}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded-md">Login</a>
+                    <a th:href="@{/register}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded-md">Register</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-button" class="md:hidden text-gray-300 hover:text-white focus:outline-none">
+            <i class="fas fa-bars fa-lg"></i>
+        </button>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden mt-4">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-800 rounded-lg">
+            <a th:href="@{/login}" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700">Candidate Login</a>
+            <a th:href="@{/register}" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700">Candidate Register</a>
+            <a th:href="@{/login}" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700">Recruiter Login</a>
+            <a th:href="@{/register}" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700">Recruiter Register</a>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="flex-grow flex items-center justify-center">
+    <div class="container mx-auto text-center px-4">
+        <h1 class="text-4xl md:text-6xl font-extrabold mb-4">Find Your Next Opportunity</h1>
+        <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-3xl mx-auto">Search through thousands of jobs from top companies to find your perfect match.</p>
+
+        <form th:action="@{/global-search/}" class="max-w-2xl mx-auto">
+            <div class="flex flex-col sm:flex-row items-center bg-white rounded-lg shadow-lg p-2 space-y-2 sm:space-y-0 sm:space-x-2">
+                <input type="text" placeholder="Search for a job title or keyword" name="job" th:value="${job}" class="w-full flex-grow px-4 py-3 text-gray-700 border-0 rounded-md focus:ring-2 focus:ring-orange-500"/>
+                <input type="text" placeholder="Enter a location" name="location" th:value="${location}" class="w-full sm:w-auto px-4 py-3 text-gray-700 border-0 rounded-md focus:ring-2 focus:ring-orange-500"/>
+                <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-orange-500 text-white font-bold rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition duration-200">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="p-4 text-center text-gray-400 text-sm">
+    <p>Copyright © MWebJobPortal.com</p>
+</footer>
+
+<!-- Scripts -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mobile menu toggle
+        const menuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (menuButton) {
+            menuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    });
+</script>
+</body>
+</html>

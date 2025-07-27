@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Saved Jobs - MWebJobs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* bg-gray-50 */
+        }
+        .logo-com {
+            background-color: #fb4f14; /* A shade of orange */
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Header -->
+<header class="bg-gray-900 text-white shadow-md sticky top-0 z-20">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between h-16">
+            <!-- Logo -->
+            <a th:href="@{/dashboard/}" class="text-2xl font-bold text-white">MWebJobs<span class="logo-com text-white px-2 py-1 rounded-md ml-1">.com</span></a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center space-x-4" sec:authorize="hasAuthority('Job Seeker')">
+                <a th:href="@{/dashboard/}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700"><i class="fas fa-search mr-1"></i>Search Jobs</a>
+                <a th:href="@{/saved-jobs/}" class="px-3 py-2 rounded-md text-sm font-medium bg-gray-700"><i class="fas fa-bookmark mr-1"></i>Saved Jobs</a>
+                <a th:href="@{/job-seeker-profile/}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700"><i class="fas fa-user-edit mr-1"></i>Edit Profile</a>
+            </nav>
+
+            <!-- User Info and Logout -->
+            <div class="hidden md:flex items-center space-x-4">
+                <img class="rounded-full h-9 w-9 object-cover" th:if="${user.photosImagePath!=null}" th:src="@{${user?.photosImagePath}}" onerror="this.onerror=null;this.src='https://placehold.co/40x40/E2E8F0/4A5568?text=U';"/>
+                <span th:if="${user.firstName != null && user.lastName != null}" th:text="${user.firstName+' '+user.lastName}" class="font-medium"></span>
+                <button class="px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-md hover:bg-orange-600" onclick="window.location.href='/logout'">Logout</button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-300 hover:text-white focus:outline-none">
+                <i class="fas fa-bars fa-lg"></i>
+            </button>
+        </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden px-2 pt-2 pb-3 space-y-1 sm:px-3" sec:authorize="hasAuthority('Job Seeker')">
+        <a th:href="@{/dashboard/}" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700"><i class="fas fa-search mr-2 w-6"></i>Search Jobs</a>
+        <a th:href="@{/saved-jobs/}" class="block px-3 py-2 rounded-md text-base font-medium bg-gray-700"><i class="fas fa-bookmark mr-2 w-6"></i>Saved Jobs</a>
+        <a th:href="@{/job-seeker-profile/}" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700"><i class="fas fa-user-edit mr-2 w-6"></i>Edit Profile</a>
+        <div class="border-t border-gray-700 pt-4 mt-4">
+            <div class="flex items-center px-3">
+                <img class="rounded-full h-10 w-10 object-cover" th:if="${user.photosImagePath!=null}" th:src="@{${user?.photosImagePath}}" onerror="this.onerror=null;this.src='https://placehold.co/40x40/E2E8F0/4A5568?text=U';"/>
+                <span th:if="${user.firstName != null && user.lastName != null}" th:text="${user.firstName+' '+user.lastName}" class="ml-3 font-medium"></span>
+            </div>
+            <button class="w-full text-left mt-3 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700" onclick="window.location.href='/logout'"><i class="fas fa-sign-out-alt mr-2 w-6"></i>Logout</button>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="p-4 md:p-6 lg:p-8">
+    <div class="container mx-auto max-w-4xl">
+
+        <!-- Page Title -->
+        <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Saved Jobs</h1>
+            <p class="text-gray-600 mt-1">Here are the jobs you've saved for later.</p>
+        </div>
+
+        <!-- Job Listings -->
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Results</h2>
+            <div class="space-y-4">
+                <th:block th:if="${#lists.isEmpty(jobPost)}">
+                    <p class="text-gray-500 text-center py-8">You have no saved jobs.</p>
+                </th:block>
+                <th:block th:each="jobPost : ${jobPost}">
+                    <a th:href="@{/job-details-apply/{id}(id=${jobPost.jobPostId})}" class="block p-4 border rounded-lg hover:shadow-md hover:border-orange-300 transition-all duration-200 bg-white">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                            <!-- Job Title and Tags -->
+                            <div class="flex-1 mb-2 md:mb-0">
+                                <h3 class="text-lg font-bold text-gray-800" th:text="${jobPost.jobTitle}">Job Title</h3>
+                                <div class="flex items-center flex-wrap gap-2 text-xs mt-2">
+                                    <span sec:authorize="hasAuthority('Recruiter')" th:text="'(' + ${jobPost.totalCandidates} + ' Applied)'" class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium"></span>
+                                    <span sec:authorize="hasAuthority('Job Seeker')" th:if="${jobPost.isActive == true}" class="bg-green-100 text-green-800 px-2 py-1 rounded-full font-medium">Applied</span>
+                                </div>
+                            </div>
+                            <!-- Location -->
+                            <div class="flex-1 text-gray-600 mb-2 md:mb-0 md:text-center">
+                                <i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>
+                                <span th:text="${jobPost.jobLocationId.city + ', ' + jobPost.jobLocationId.state}">City, State</span>
+                            </div>
+                            <!-- Company -->
+                            <div class="flex-1 text-gray-600 md:text-right">
+                                <i class="fas fa-building mr-2 text-gray-400"></i>
+                                <span th:text="${jobPost.jobCompanyId.name}">Company Name</span>
+                            </div>
+                        </div>
+                    </a>
+                </th:block>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mobile menu toggle
+        const menuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (menuButton) {
+            menuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    });
+</script>
+</body>
+</html>
