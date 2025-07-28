@@ -67,7 +67,8 @@
             <!-- User Info and Logout -->
             <div class="hidden md:flex items-center space-x-4">
                 <img class="rounded-full h-9 w-9 object-cover" th:src="@{${user.photosImagePath}}" onerror="this.onerror=null;this.src='https://placehold.co/36x36/E2E8F0/4A5568?text=U';"/>
-                <span th:text="${user.firstName+' '+user.lastName}" class="font-medium"></span>
+                   <span th:if="${user.firstName != null && user.lastName != null}"
+                      th:text="${user.firstName + ' ' + user.lastName}" class="font-medium"></span>
                 <button class="px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-md hover:bg-orange-600" onclick="window.location.href='/logout'">Logout</button>
             </div>
 
