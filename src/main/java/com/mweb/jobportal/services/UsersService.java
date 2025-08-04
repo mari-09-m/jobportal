@@ -26,35 +26,35 @@ public class UsersService {
     private final UsersRepository usersRepository;
     private final JobSeekerProfileRepository jobSeekerProfileRepository;
     private final RecruiterProfileRepository recruiterProfileRepository;
-    private final UsersTypeRepository usersTypeRepository; // ✅ KEEP THIS
+    private final UsersTypeRepository usersTypeRepository;
     private final PasswordEncoder passwordEncoder;
     @Autowired
     public UsersService(
             UsersRepository usersRepository,
             JobSeekerProfileRepository jobSeekerProfileRepository,
             RecruiterProfileRepository recruiterProfileRepository,
-            UsersTypeRepository usersTypeRepository, // ✅ ADD THIS PARAMETER
+            UsersTypeRepository usersTypeRepository,
             PasswordEncoder passwordEncoder
     ) {
         this.usersRepository = usersRepository;
         this.jobSeekerProfileRepository = jobSeekerProfileRepository;
         this.recruiterProfileRepository = recruiterProfileRepository;
-        this.usersTypeRepository = usersTypeRepository; // ✅ ASSIGN IT
+        this.usersTypeRepository = usersTypeRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     public Users addNew(Users users) {
-        // ✅ Always fetch the actual UsersType entity first!
+
         UsersType type = usersTypeRepository.findById(users.getUserTypeId())
                 .orElseThrow(() -> new RuntimeException("Invalid UsersType ID"));
 
-        users.setUsersTypeId(type); // ✅ Attach real entity
+        users.setUsersTypeId(type);
 
         users.setActive(true);
         users.setRegistrationDate(new Date(System.currentTimeMillis()));
         users.setPassword(passwordEncoder.encode(users.getPassword()));
         Users savedUser = usersRepository.save(users);
-        int userTypeId = type.getUserTypeId(); // ✅ Now safe!
+        int userTypeId = type.getUserTypeId();
         if (userTypeId == 1) {
             recruiterProfileRepository.save(new RecruiterProfile(savedUser));
         } else {

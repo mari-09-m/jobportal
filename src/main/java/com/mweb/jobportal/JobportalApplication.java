@@ -7,11 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class JobportalApplication {
 
 	public static void main(String[] args) {
-		// ✅ Set before context starts
+
 		System.setProperty("spring.servlet.multipart.max-file-size", "5MB");
 		System.setProperty("spring.servlet.multipart.max-request-size", "10MB");
 
-		// ✅ This one fixes your error
+
 		System.setProperty("org.apache.tomcat.util.http.fileupload.FileUploadBase.fileCountMax", "20");
 
 		SpringApplication.run(JobportalApplication.class, args);
